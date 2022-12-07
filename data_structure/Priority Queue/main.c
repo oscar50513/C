@@ -41,9 +41,11 @@ int main() {
     PQ_t maxPQ;
 
     createPQ(&maxPQ, MAXHEAP, sizeof(student_t), 100, compareMath);
-
-    for(int i=0;i<6;i++)
-        Enqueue(&maxPQ, &node[i]);
+    printf("IsEmpty: %d\n",IsEmpty(&maxPQ));
+    for(int i=0;i<3;i++){
+        printf("%p  ",&node[i]);
+        Enqueue(&maxPQ, &node[i]);}
+    printf("IsEmpty: %d\n",IsEmpty(&maxPQ));    
     print(&maxPQ);
 
 }

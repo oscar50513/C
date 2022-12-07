@@ -12,8 +12,8 @@ typedef enum {
 } H_class;
 
 typedef struct PQ {
-    H_class pqClass;
     Heap_t  heap;
+    H_class pqClass;
     int maxSize;
     int elementSize;
     int (*compare)(void* elementA, void* elementB);
@@ -25,8 +25,8 @@ int Enqueue(PQ_t *pq, void * elementA); // add an element into PQ
 int IsEmpty(PQ_t *pq);// return 0: not empty, 1: empty
 int IsFull(PQ_t *pq); // return 0: not full, 1:full
 void * Dequeue(PQ_t *pq); // delete an element from PQ 
-static void ReheapDown(Heap_t *, H_class maxOrmin, int root, int bottom);
-static void ReheapUp(Heap_t*, H_class maxOrmin, int root, int bottom); 
+static void ReheapDown(Heap_t *, H_class maxOrmin, int root, int bottom,int (*compare)(void* elementA, void *elementB),int size);
+static void ReheapUp(Heap_t*, H_class maxOrmin, int root, int bottom, int (*compare)(void* elementA, void *elementB),int size); 
 static void swap(void *elementA, void* elementB, int elementSize); //利用 memcpy 實作 swap
 #endif // DOUBLELINK_H_INCLUDED
 
