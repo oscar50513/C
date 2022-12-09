@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "pq.h"
 
 typedef struct myElement {
@@ -12,6 +13,7 @@ typedef struct myElement {
 int compareMath(void *elementA, void *elementB) {
    int mathA = ((student_t *)elementA)->math;
    int mathB = ((student_t *)elementB)->math;
+   //printf("mathA=%d mathB=%d\n",mathA,mathB);
    if(mathA>mathB) {
         return 1;
    }else if(mathA<mathB){
@@ -40,12 +42,19 @@ int main() {
 
     PQ_t maxPQ;
 
-    createPQ(&maxPQ, MAXHEAP, sizeof(student_t), 100, compareMath);
-    printf("IsEmpty: %d\n",IsEmpty(&maxPQ));
-    for(int i=0;i<3;i++){
-        printf("%p  ",&node[i]);
-        Enqueue(&maxPQ, &node[i]);}
-    printf("IsEmpty: %d\n",IsEmpty(&maxPQ));    
+    createPQ(&maxPQ, MINHEAP, sizeof(student_t), 100, compareMath);
+    char *ans = (IsEmpty(&maxPQ)) ? "true":"false";
+    printf("IsEmpty: %s\n\n",ans);
+    for(int i=0;i<6;i++){
+        Enqueue(&maxPQ, &node[i]);
+        }    
     print(&maxPQ);
-
+    ans = (IsEmpty(&maxPQ)) ? "true":"false";
+    printf("\nIsEmpty: %s\n\n",ans);
+    printf("\n");
+    for(int i=0;i<6;i++){    
+    student_t *temp = (student_t *)Dequeue(&maxPQ);
+    printf("Dequeue: ID=%s, math=%d,eng=%d\n",temp->ID,temp->math,temp->eng);
+    free(temp);
+    }
 }
