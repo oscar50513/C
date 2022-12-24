@@ -26,7 +26,8 @@ void print(PQ_t *pq) {
     student_t *temp;
     for (int i=0; i<pq->heap.numElements;i++){
         temp = (student_t *)(pq->heap.elements+i*sizeof(student_t));
-        printf("index=%d, ID=%s,math=%d, eng=%d\n",i,temp->ID, temp->math, temp->eng);
+        printf("index=%d, ID=%s,math=%d, eng=%d\n",
+        i,temp->ID, temp->math, temp->eng);
     }
 }
 

@@ -72,7 +72,7 @@ static void ReheapDown(Heap_t *heap, H_class maxOrmin, int root, int bottom,int 
                 maxChild = leftChild;
         else {
             int compare_num = compare(heap->elements+(leftChild*size),heap->elements+(rightChild*size));
-            if(compare_num==num) // leftChild > rightChild
+            if(compare_num==num) // 1:leftChild > rightChild
                 maxChild = leftChild;                
             else
                 maxChild = rightChild;

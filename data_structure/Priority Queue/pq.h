@@ -19,8 +19,10 @@ typedef struct PQ {
     int (*compare)(void* elementA, void* elementB);
 } PQ_t;
 
-/* 建立一個 pq, 其中 pqClass為此PQ的種類(MINHEAP or MAXHEAP)，元素大小為 elementSize, 最多元數個數為 maxSize, compare 是函數指標 */
-void createPQ(PQ_t *pq, H_class pqClass, int elementSize, int maxSize, int (*compare)(void* elementA, void *elementB));
+/* 建立一個 pq, 其中 pqClass為此PQ的種類(MINHEAP or MAXHEAP)，
+元素大小為 elementSize, 最多元數個數為 maxSize, compare 是函數指標 */
+void createPQ(PQ_t *pq, H_class pqClass, int elementSize,
+ int maxSize, int (*compare)(void* elementA, void *elementB));
 int Enqueue(PQ_t *pq, void * elementA); // add an element into PQ
 int IsEmpty(PQ_t *pq);// return 0: not empty, 1: empty
 int IsFull(PQ_t *pq); // return 0: not full, 1:full
