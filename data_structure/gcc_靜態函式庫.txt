@@ -2,7 +2,7 @@ https://blog.gtwang.org/programming/howto-create-library-using-gcc/
 
 若就一般正常的編譯程序，我們會使用 gcc 直接編譯所有的 C 檔案，連結後產生執行檔：
 gcc -o main main.c sum.c
-
+gcc -o Ot8b.exe Ot8b.c
 
 靜態函式庫
 gcc -c -o sum.o sum.c

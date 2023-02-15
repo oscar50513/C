@@ -3,6 +3,7 @@
 #include <memory.h>
 #include <time.h>
 #include <assert.h>
+
 #define Board_Size 8
 #define TRUE 1
 #define FALSE 0
@@ -23,6 +24,7 @@ int  Compute_Grades(int flag);
 void Computer_Think( int *x, int *y);
 int Search(int myturn, int mylevel);
 int search_next(int x, int y, int myturn, int mylevel, int alpha, int beta);
+
 int Search_Counter;
 int Computer_Take;
 int Winner;
@@ -32,38 +34,46 @@ int Now_Board[ Board_Size ][ Board_Size ];
 int Legal_Moves[ Board_Size ][ Board_Size ];
 int HandNumber;
 int sequence[100];
+
 int Black_Count, White_Count;
 int Turn = 0;// 0 is black or 1 is white
 int Stones[2]= {1,2}; // 1: black, 2: white
 int DirX[8] = {0, 1, 1, 1, 0, -1, -1, -1};
 int DirY[8] = {-1, -1, 0, 1, 1, 1, 0, -1};
+
 int licnt = 1; // 0 is first
 int LastX, LastY;
 int Think_Time=0, Total_Time=0;
 //int Auto_Check_Dead;
+
 int search_deep = 8;
+
 int alpha_beta_option = TRUE;
 int resultX, resultY;
 int search_level_now;
+
 //int board_weight[ Board_Size ][ Board_Size ];
 int board_weight[8][8] =
 {    //a,    b,  c,  d,  e,  f,    g,   h,
-    {250,  -50, 20, 15, 15, 20,  -50, 250},//1
-    {-50, -100,  1,  1,  1,  1, -100, -50},//2
+    {250,  -10, 20, 15, 15, 20,  -10, 250},//1
+    {-10, -100,  1,  1,  1,  1, -100, -10},//2
     { 20,    1,  5,  4,  4,  5,    1,  20},//3
     { 15,    1,  4,  1,  1,  4,    1,  15},//4
     { 15,    1,  4,  1,  1,  4,    1,  15},//5
     { 20,    1,  5,  4,  4,  5,    1,  20},//6
-    {-50, -100,  1,  1,  1,  1, -100, -50},//7
-    {250,  -50, 20, 15, 15, 20,  -50, 250} //8
+    {-10, -100,  1,  1,  1,  1, -100, -10},//7
+    {250,  -10, 20, 15, 15, 20,  -10, 250} //8
 };
+
 typedef struct location
 {
     int i;
     int j;
     int g;
 } Location;
+
 //---------------------------------------------------------------------------
+
 int main(int argc, char *argv[] )
 {
     char compcolor = 'W', c[10];
@@ -285,6 +295,7 @@ int Read_File( FILE *fp, char *c )
     return 1;
 }*/
 //---------------------------------------------------------------------------
+
 char Load_File( void )
 {
     FILE *fp;
@@ -309,6 +320,7 @@ char Load_File( void )
     return ( n%2 == 1 )? 'B' : 'W';
 }
 //---------------------------------------------------------------------------
+
 void Init()
 {
     time_t clockBegin, clockEnd;
@@ -337,6 +349,7 @@ void Init()
     Winner = 0;
 }
 //---------------------------------------------------------------------------
+
 int Play_a_Move( int x, int y)
 {
     FILE *fp;
@@ -379,6 +392,7 @@ int Play_a_Move( int x, int y)
     return 1;
 }
 //---------------------------------------------------------------------------
+
 int Put_a_Stone(int x, int y)
 {
     FILE *fp;
@@ -409,6 +423,7 @@ int Put_a_Stone(int x, int y)
     return FALSE;
 }
 //---------------------------------------------------------------------------
+
 void Show_Board_and_Set_Legal_Moves( void )
 {   
     // 畫出可以移動的位置
@@ -441,6 +456,7 @@ void Show_Board_and_Set_Legal_Moves( void )
     printf("\n");
 }
 //---------------------------------------------------------------------------
+
 int Find_Legal_Moves( int color )
 {
     int i,j;
@@ -494,6 +510,7 @@ int Check_Cross(int x, int y, int update)
         return FALSE;
 }
 //---------------------------------------------------------------------------
+
 int Check_Straight_Army(int x, int y, int d, int update)
 {
     int me = Now_Board[x][y];
@@ -548,6 +565,7 @@ int Check_Straight_Army(int x, int y, int d, int update)
     else return 0;
 }
 //---------------------------------------------------------------------------
+
 int In_Board(int x, int y)
 {
     if( x >= 0 && x < Board_Size && y >= 0 && y < Board_Size )
@@ -556,6 +574,7 @@ int In_Board(int x, int y)
         return FALSE;
 }
 //---------------------------------------------------------------------------
+
 int Compute_Grades(int flag)
 {
     int i,j;
@@ -577,14 +596,17 @@ int Compute_Grades(int flag)
                 WW = WW + board_weight[i][j];
             }
         }
+
     if(flag)
     {
         Black_Count = B;
         White_Count = W;
         printf("#%d Grade: Black %d, White %d\n", HandNumber, B, W);
     }
+    
     return ( BW - WW );
 }
+
 int getstable(int myturn){
     int stable[2] = {0,0};
     int cind1[4] = {0,0,7,7};
@@ -610,9 +632,10 @@ int getstable(int myturn){
                     break;
                 else{
                     stable[1] += 1;}}}}
-    return stable[0];//+stable[1]
+    return stable[0]+stable[1];
     }
 //---------------------------------------------------------------------------
+
 int Check_EndGame( void )
 {
     int lc1, lc2;
@@ -668,6 +691,7 @@ int Check_EndGame( void )
     return FALSE;
 }
 //---------------------------------------------------------------------------
+
 void Computer_Think( int *x, int *y )
 {
 //20210529 edit************
@@ -701,32 +725,49 @@ void Computer_Think( int *x, int *y )
 
 }
 //---------------------------------------------------------------------------
+
 //MinMax search
 int Search(int myturn, int mylevel)
 {
+    
     int i,j;
+    /*
+    if(licnt==0){
+        search_deep=8;
+        if (HandNumber<40 && HandNumber>32) search_deep = 10;
+    }
+    else{
+        search_deep=7;
+        if (HandNumber<40 && HandNumber>32) search_deep = 9;
+    }
+    */
+    /*
+    if (HandNumber<15 && HandNumber>13) search_deep = 10;
+    else search_deep = 8;*/
+    printf("search_deep:%d\n",search_deep);
+
     Location min, max;
+
     min.i = min.j = -1;
     min.g = 99999;
+
     max.i = max.j = -1;
     max.g = -99999;
+
     int B[ Board_Size ][ Board_Size ];
     int L[ Board_Size ][ Board_Size ];
+
     memcpy( B, Now_Board, sizeof(int) * Board_Size * Board_Size );
     search_level_now = 0;
     int c = Find_Legal_Moves( Stones[myturn] );
-    if (HandNumber<29 && HandNumber>20 && c<8) search_deep = 9;
-    else search_deep = 8;
-    if(HandNumber>40) search_deep = 10;
-    printf("search_deep:%d\n",search_deep);
     if(c <= 0) return FALSE;
     memcpy( L, Legal_Moves, sizeof(int) * Board_Size * Board_Size );
 ////20210529 edit************
 //random move
-    if (HandNumber < 3)
+    if (HandNumber < 7)
         while ( 1 )
             for( i = Board_Size; i >= 0; i-- )
-                for( j = 0; j <= Board_Size; j++ )
+                for( j = Board_Size; j >= 0; j-- )
                     if(L[i][j] == TRUE)
                     {
                         if ( rand()%10 <= 1 || HandNumber < 2 )
@@ -740,6 +781,7 @@ int Search(int myturn, int mylevel)
     int alpha = -99999;
     int beta = 99999;
     int g = -1;
+
     for( i = 0; i < Board_Size; i++ )
         for( j = 0; j < Board_Size; j++ )
             if(L[i][j] == TRUE)//you could add move ordering
@@ -751,7 +793,7 @@ int Search(int myturn, int mylevel)
                 g = search_next(i,j, 1-myturn, mylevel+1, alpha, beta);
                 int aaa = getstable(myturn);
                 //printf("getstable:%d\n",aaa);
-                g += aaa*2;
+                g += aaa;
                 if( myturn == 0 )  // max level
                     if( g > max.g )
                     {
@@ -776,7 +818,9 @@ int Search(int myturn, int mylevel)
                     }
                 */
             }
+
     memcpy( Now_Board, B, sizeof(int) * Board_Size * Board_Size );
+
     if( myturn == 0 )
     {
         resultX = max.i;
@@ -792,10 +836,13 @@ int Search(int myturn, int mylevel)
     return FALSE;
 }
 //---------------------------------------------------------------------------
+
 int search_next( int x, int y, int myturn, int mylevel, int alpha, int beta )
 {
     int g;
+
     Search_Counter ++;
+
     if( mylevel >= search_deep )
     {
         g = Compute_Grades( FALSE );
@@ -807,16 +854,20 @@ int search_next( int x, int y, int myturn, int mylevel, int alpha, int beta )
         ///int my_alpha = alpha; int my_beta = beta;
         //Location min; min.i = -1; min.j = -1; min.g = 99999;
         //Location max; max.i = -1; max.i = -1; max.g = -99999;
+
         int B[ Board_Size ][ Board_Size ];
         int L[ Board_Size ][ Board_Size ];
+
         int c = Find_Legal_Moves( Stones[myturn] );
         if(c <= 0)
         {
             g = Compute_Grades( FALSE );
             return g;
         }
+
         memcpy( B, Now_Board, sizeof(int) * Board_Size * Board_Size );
         memcpy( L, Legal_Moves, sizeof(int) * Board_Size * Board_Size );
+
         for(i=0; i<Board_Size ; i++)
             for(j=0 ; j<Board_Size ; j++)
                 if(L[i][j] == TRUE)//you could add move ordering
@@ -836,6 +887,7 @@ int search_next( int x, int y, int myturn, int mylevel, int alpha, int beta )
                         if(g < beta)
                             beta = g;
                     }
+
                     if( alpha_beta_option == TRUE)
                         if( alpha >= beta )// cutoff
                         {
@@ -844,7 +896,9 @@ int search_next( int x, int y, int myturn, int mylevel, int alpha, int beta )
                             break;
                         }
                 }
+
         memcpy(Now_Board, B, sizeof(int) * Board_Size * Board_Size);
+
         if(myturn == 0) // max level
             return alpha; //max.g;
         else
@@ -852,3 +906,4 @@ int search_next( int x, int y, int myturn, int mylevel, int alpha, int beta )
     }
 }
 //---------------------------------------------------------------------------
+
